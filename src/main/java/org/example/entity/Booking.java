@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class Booking {
 
     private Long id;
-    private WorkSpace workSpace;
+    private Long workSpaceId;
     private LocalDate startDate;
     private LocalDate endDate;
 

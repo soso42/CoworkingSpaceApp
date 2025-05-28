@@ -11,12 +11,7 @@ import java.util.Optional;
 
 public class WorkSpaceServiceImpl implements WorkSpaceService {
 
-    private static WorkSpaceServiceImpl currentInstance;
-
-    private final WorkSpaceRepository repository = new InMemoryWorkSpaceRepository();
-
-
-    private WorkSpaceServiceImpl() {}
+    private final WorkSpaceRepository repository = InMemoryWorkSpaceRepository.getInstance();
 
 
     @Override
@@ -42,13 +37,6 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
     @Override
     public Optional<WorkSpace> findById(Long id) {
         return repository.findById(id);
-    }
-
-    public static WorkSpaceServiceImpl getInstance() {
-        if (currentInstance == null) {
-            currentInstance = new WorkSpaceServiceImpl();
-        }
-        return currentInstance;
     }
 
 }
