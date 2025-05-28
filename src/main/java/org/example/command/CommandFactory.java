@@ -1,0 +1,30 @@
+package org.example.command;
+
+import org.example.command.impl.*;
+import org.example.exceptions.UnknownCommandException;
+
+import java.util.Map;
+
+public class CommandFactory {
+
+    Map<String, Command> commands = Map.of(
+        "admin", new AdminCommand(),
+        "add", new AddCommand(),
+        "remove", new RemoveCommand(),
+        "view", new ViewCommand(),
+
+        "user", new UserCommand(),
+        "browse", new BrowseCommand(),
+
+        "exit", new ExitCommand()
+    );
+
+    public Command getCommand(String commandName) {
+        Command command = commands.get(commandName);
+        if (command == null) {
+            throw new UnknownCommandException("Command is unknown: " + commandName);
+        }
+        return command;
+    }
+
+}
