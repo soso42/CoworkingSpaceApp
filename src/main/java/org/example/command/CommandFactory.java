@@ -15,6 +15,7 @@ public class CommandFactory {
 
         "user", new UserCommand(),
         "browse", new BrowseCommand(),
+        "book", new BookCommand(),
 
         "exit", new ExitCommand()
     );

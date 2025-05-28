@@ -22,6 +22,13 @@ public class InMemoryBookingRepository implements BookingRepository {
 
 
     @Override
+    public void save(Booking booking) {
+        Long lastId = this.bookings.getLast().getId();
+        booking.setId(lastId + 1);
+        this.bookings.add(booking);
+    }
+
+    @Override
     public List<Booking> findAll() {
         return this.bookings;
     }
