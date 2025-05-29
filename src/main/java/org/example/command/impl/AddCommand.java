@@ -25,7 +25,7 @@ public class AddCommand implements Command {
     public void execute() {
         WorkSpace workSpace = new WorkSpace();
 
-        System.out.println("What is the type of the new work space?\n1. Desk\n2. Private room\n3. Conference room");
+        System.out.println("\nWhat is the type of the new work space?\n1. Desk\n2. Private room\n3. Conference room");
         System.out.println("Enter numbers 1, 2 or 3:");
         workSpace.setType(types.get(Long.parseLong(scanner.nextLine())));
 

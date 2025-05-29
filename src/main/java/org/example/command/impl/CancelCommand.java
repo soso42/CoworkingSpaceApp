@@ -25,7 +25,7 @@ public class CancelCommand implements Command {
 
         try {
             bookingService.cancelBooking(id);
-            System.out.println("n\nBooking cancelled successfully.\n");
+            System.out.println("\nBooking cancelled successfully.\n");
         } catch (BookingNotFoundException e) {
             System.out.println("\nBooking with the id " + id + " was not found.\n");
         }
