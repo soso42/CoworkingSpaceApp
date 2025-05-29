@@ -4,6 +4,7 @@ import org.example.command.Command;
 import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
 import org.example.repository.impl.InMemoryBookingRepository;
+import org.example.repository.impl.InMemoryWorkSpaceRepository;
 import org.example.service.BookingService;
 import org.example.service.WorkSpaceService;
 import org.example.service.impl.BookingServiceImpl;
@@ -15,7 +16,7 @@ import java.util.Scanner;
 public class BookCommand implements Command {
 
     private final BookingService bookingService = new BookingServiceImpl(InMemoryBookingRepository.getInstance());
-    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl();
+    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(InMemoryWorkSpaceRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 
     @Override

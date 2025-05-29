@@ -1,17 +1,18 @@
 package org.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.example.entity.WorkSpace;
 import org.example.exceptions.WorkSpaceNotFoundException;
 import org.example.repository.WorkSpaceRepository;
-import org.example.repository.impl.InMemoryWorkSpaceRepository;
 import org.example.service.WorkSpaceService;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class WorkSpaceServiceImpl implements WorkSpaceService {
 
-    private final WorkSpaceRepository repository = InMemoryWorkSpaceRepository.getInstance();
+    private final WorkSpaceRepository repository;
 
 
     @Override

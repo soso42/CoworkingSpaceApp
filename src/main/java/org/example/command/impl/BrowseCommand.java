@@ -1,6 +1,7 @@
 package org.example.command.impl;
 
 import org.example.command.Command;
+import org.example.repository.impl.InMemoryWorkSpaceRepository;
 import org.example.service.WorkSpaceService;
 import org.example.service.impl.WorkSpaceServiceImpl;
 
@@ -8,7 +9,7 @@ import java.util.Scanner;
 
 public class BrowseCommand implements Command {
 
-    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl();
+    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(InMemoryWorkSpaceRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 
     @Override

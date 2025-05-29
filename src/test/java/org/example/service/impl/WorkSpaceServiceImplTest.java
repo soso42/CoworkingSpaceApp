@@ -3,14 +3,24 @@ package org.example.service.impl;
 import org.example.entity.WorkSpace;
 import org.example.enums.WorkSpaceType;
 import org.example.exceptions.WorkSpaceNotFoundException;
+import org.example.repository.impl.InMemoryWorkSpaceRepository;
 import org.example.service.WorkSpaceService;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class WorkSpaceServiceImplTest {
 
-    private static WorkSpaceService service = new WorkSpaceServiceImpl();
+    private static InMemoryWorkSpaceRepository mockRepository = mock(InMemoryWorkSpaceRepository.class);
+    private static WorkSpaceService mockService = new WorkSpaceServiceImpl(mockRepository);
+
+    private static WorkSpaceService service = new WorkSpaceServiceImpl(InMemoryWorkSpaceRepository.getInstance());
 
 
     @Test
@@ -60,10 +70,39 @@ class WorkSpaceServiceImplTest {
 
     @Test
     void findAll() {
+        // Given
+        List<WorkSpace> workSpaces = Arrays.asList(
+                new WorkSpace(),
+                new WorkSpace()
+        );
+        when(mockRepository.findAll()).thenReturn(workSpaces);
+        // When
+        List<WorkSpace> result = mockService.findAll();
+        // Then
+        assertEquals(workSpaces.size(), result.size());
     }
 
     @Test
-    void findById() {
+    void findById_happyPath() {
+        // Given
+        long id = 999L;
+        WorkSpace mockWorkSpace = mock(WorkSpace.class);
+        when(mockService.findById(id)).thenReturn(Optional.of(mockWorkSpace));
+        // When
+        Optional<WorkSpace> result = mockService.findById(id);
+        // Then
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    void findById_whenIdNotExists() {
+        // Given
+        long id = Long.MAX_VALUE;
+        when(mockService.findById(id)).thenReturn(Optional.empty());
+        // When
+        Optional<WorkSpace> result = mockService.findById(id);
+        // Then
+        assertTrue(result.isEmpty());
     }
 
 }
