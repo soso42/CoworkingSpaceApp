@@ -61,10 +61,10 @@ public class Main {
         System.out.println();
         System.out.println("list of available commands:");
         System.out.println();
-        System.out.println("add     - adds a new coworking space");
-        System.out.println("remove  - removes a coworking space");
-        System.out.println("view    - view all reservations");
-        System.out.println("exit    - exits the program");
+        System.out.println("add       - adds a new coworking space");
+        System.out.println("remove    - removes a coworking space");
+        System.out.println("view all  - view all reservations");
+        System.out.println("exit      - exits the program");
         System.out.println();
         System.out.println("Please type a command to continue: ");
     }
@@ -77,7 +77,7 @@ public class Main {
         System.out.println();
         System.out.println("browse    - browse available spaces");
         System.out.println("book      - make a reservation");
-        System.out.println("view all  - view my reservations");
+        System.out.println("view      - view my reservations");
         System.out.println("cancel    - cancel a reservations");
         System.out.println("exit      - exits the program");
         System.out.println();

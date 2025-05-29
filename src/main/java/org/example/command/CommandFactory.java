@@ -11,11 +11,12 @@ public class CommandFactory {
         "admin", new AdminCommand(),
         "add", new AddCommand(),
         "remove", new RemoveCommand(),
-        "view", new ViewCommand(),
+        "view all", new ViewAllCommand(),
 
         "user", new UserCommand(),
         "browse", new BrowseCommand(),
         "book", new BookCommand(),
+        "view", new ViewCommand(),
 
         "exit", new ExitCommand()
     );

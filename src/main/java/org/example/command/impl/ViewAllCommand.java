@@ -6,7 +6,7 @@ import org.example.service.impl.BookingServiceImpl;
 
 import java.util.Scanner;
 
-public class ViewCommand implements Command {
+public class ViewAllCommand implements Command {
 
     private final BookingService bookingService = new BookingServiceImpl();
     private final Scanner scanner = new Scanner(System.in);
@@ -14,7 +14,7 @@ public class ViewCommand implements Command {
     @Override
     public void execute() {
 
-        System.out.println("\nList of all my reservations\n");
+        System.out.println("\nList of all reservations:\n");
 
         bookingService.findAll().forEach(System.out::println);
 
