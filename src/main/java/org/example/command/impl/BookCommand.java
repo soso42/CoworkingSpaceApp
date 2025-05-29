@@ -3,6 +3,7 @@ package org.example.command.impl;
 import org.example.command.Command;
 import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
+import org.example.repository.impl.InMemoryBookingRepository;
 import org.example.service.BookingService;
 import org.example.service.WorkSpaceService;
 import org.example.service.impl.BookingServiceImpl;
@@ -13,9 +14,9 @@ import java.util.Scanner;
 
 public class BookCommand implements Command {
 
-    private final BookingService bookingService = new BookingServiceImpl();
+    private final BookingService bookingService = new BookingServiceImpl(InMemoryBookingRepository.getInstance());
     private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl();
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     @Override
     public void execute() {
@@ -34,7 +35,7 @@ public class BookCommand implements Command {
 
         Booking booking = new Booking(null, id, startDate, endDate);
         try {
-            bookingService.save(booking);
+            bookingService.book(booking);
             System.out.println("\nBooking successfully made");
         } catch (BookingNotAvailableException e) {
             System.out.println("\nBooking not available for your chosen dates...");

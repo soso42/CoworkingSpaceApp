@@ -5,7 +5,7 @@ import org.example.entity.Booking;
 import java.util.List;
 
 public interface BookingService {
-    void save(Booking booking);
+    void book(Booking booking);
     List<Booking> findAll();
     void cancelBooking(Long id);
 }

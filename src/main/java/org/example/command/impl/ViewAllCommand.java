@@ -1,6 +1,7 @@
 package org.example.command.impl;
 
 import org.example.command.Command;
+import org.example.repository.impl.InMemoryBookingRepository;
 import org.example.service.BookingService;
 import org.example.service.impl.BookingServiceImpl;
 
@@ -8,7 +9,7 @@ import java.util.Scanner;
 
 public class ViewAllCommand implements Command {
 
-    private final BookingService bookingService = new BookingServiceImpl();
+    private final BookingService bookingService = new BookingServiceImpl(InMemoryBookingRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 
     @Override

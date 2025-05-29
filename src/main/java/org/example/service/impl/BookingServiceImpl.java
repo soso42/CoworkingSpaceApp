@@ -1,35 +1,36 @@
 package org.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
 import org.example.exceptions.BookingNotFoundException;
 import org.example.repository.BookingRepository;
-import org.example.repository.impl.InMemoryBookingRepository;
 import org.example.service.BookingService;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    private final BookingRepository bookingRepository = InMemoryBookingRepository.getInstance();
+    private final BookingRepository bookingRepository;
 
 
     @Override
-    public void save(Booking booking) {
-        if (bookingOverlap(booking)) {
+    public void book(Booking booking) {
+        if (bookingOverlapsOthers(booking)) {
             throw new BookingNotAvailableException("Booking overlaps another booking");
         }
         bookingRepository.save(booking);
     }
 
-    private boolean bookingOverlap(Booking booking) {
+    private boolean bookingOverlapsOthers(Booking booking) {
         return bookingRepository.findAll().stream()
                 .filter(b -> b.getWorkSpaceId().equals(booking.getWorkSpaceId()))
                 .anyMatch(b -> overlaps(b, booking));
     }
 
-    public boolean overlaps(Booking b1, Booking b2) {
+    private boolean overlaps(Booking b1, Booking b2) {
         return !b1.getStartDate().isAfter(b2.getEndDate()) && !b1.getEndDate().isBefore(b2.getStartDate());
     }
 

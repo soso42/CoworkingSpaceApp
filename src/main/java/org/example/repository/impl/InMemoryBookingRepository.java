@@ -11,7 +11,7 @@ import java.util.Optional;
 public class InMemoryBookingRepository implements BookingRepository {
 
     private static InMemoryBookingRepository INSTANCE;
-    private List<Booking> bookings = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
 
 
     private InMemoryBookingRepository() {

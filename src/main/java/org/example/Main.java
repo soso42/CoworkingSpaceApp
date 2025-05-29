@@ -6,7 +6,6 @@ import org.example.enums.AccessLevel;
 import org.example.exceptions.UnknownCommandException;
 import org.example.service.AuthService;
 import org.example.service.impl.AuthServiceImpl;
-
 import java.util.Map;
 import java.util.Scanner;
 
@@ -36,7 +35,7 @@ public class Main {
                 command = commandFactory.getCommand(input);
                 command.execute();
             } catch (UnknownCommandException e) {
-                System.out.println("\nUNKNOWN COMMAND. Please try again\n");
+                System.out.println("\n!!!!!     UNKNOWN COMMAND. Please try again     !!!!!");
             }
         }
 
