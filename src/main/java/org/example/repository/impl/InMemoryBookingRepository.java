@@ -6,6 +6,7 @@ import org.example.repository.BookingRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class InMemoryBookingRepository implements BookingRepository {
 
@@ -29,8 +30,20 @@ public class InMemoryBookingRepository implements BookingRepository {
     }
 
     @Override
+    public Optional<Booking> findById(Long id) {
+        return this.bookings.stream()
+                .filter(booking -> booking.getId().equals(id))
+                .findFirst();
+    }
+
+    @Override
     public List<Booking> findAll() {
         return this.bookings;
+    }
+
+    @Override
+    public void delete(Booking booking) {
+        bookings.remove(booking);
     }
 
 

@@ -7,4 +7,5 @@ import java.util.List;
 public interface BookingService {
     void save(Booking booking);
     List<Booking> findAll();
+    void cancelBooking(Long id);
 }

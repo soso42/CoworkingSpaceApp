@@ -16,8 +16,4 @@ public class Booking {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public boolean overlaps(LocalDate startDate, LocalDate endDate) {
-        return !this.startDate.isAfter(endDate) && !this.endDate.isBefore(startDate);
-    }
-
 }
