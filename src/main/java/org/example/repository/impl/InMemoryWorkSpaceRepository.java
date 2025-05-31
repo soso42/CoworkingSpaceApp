@@ -1,28 +1,21 @@
 package org.example.repository.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.entity.WorkSpace;
-import org.example.enums.WorkSpaceType;
 import org.example.repository.WorkSpaceRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
 public class InMemoryWorkSpaceRepository implements WorkSpaceRepository {
 
     private static InMemoryWorkSpaceRepository INSTANCE;
 
-    private final List<WorkSpace> workspaces = new ArrayList<>();
+    private List<WorkSpace> workspaces;
 
-    private InMemoryWorkSpaceRepository() {
-        workspaces.add(new WorkSpace(1L, WorkSpaceType.FLEXIBLE_DESK, 90.00, true));
-        workspaces.add(new WorkSpace(2L, WorkSpaceType.FLEXIBLE_DESK, 90.00, true));
-        workspaces.add(new WorkSpace(3L, WorkSpaceType.FLEXIBLE_DESK, 90.00, true));
-        workspaces.add(new WorkSpace(4L, WorkSpaceType.FLEXIBLE_DESK, 90.00, true));
-        workspaces.add(new WorkSpace(5L, WorkSpaceType.PRIVATE_ROOM, 150.00, true));
-        workspaces.add(new WorkSpace(6L, WorkSpaceType.PRIVATE_ROOM, 150.00, true));
-        workspaces.add(new WorkSpace(7L, WorkSpaceType.CONFERENCE_ROOM, 230.00, true));
-    }
 
     @Override
     public void save(WorkSpace workSpace) {

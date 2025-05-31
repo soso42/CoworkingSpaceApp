@@ -6,6 +6,7 @@ import org.example.enums.AccessLevel;
 import org.example.exceptions.UnknownCommandException;
 import org.example.service.AuthService;
 import org.example.service.impl.AuthServiceImpl;
+import org.example.utils.FileManager;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -23,6 +24,9 @@ public class AppFacade {
     );
 
     public void start() {
+
+        FileManager.fetchData();
+
         while (true) {
             AccessLevel accessLevel = authService.getAccessLevel();
             menus.get(accessLevel).run();

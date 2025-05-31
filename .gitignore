@@ -41,3 +41,7 @@ build/
 ### IDE ###
 .idea/
 .mvn
+
+### temp files for serialization ###
+bookingsDB
+workspacesDB
