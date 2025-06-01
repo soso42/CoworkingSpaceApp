@@ -4,9 +4,13 @@ import org.example.command.Command;
 import org.example.command.CommandFactory;
 import org.example.enums.AccessLevel;
 import org.example.exceptions.UnknownCommandException;
+import org.example.repository.impl.InMemoryBookingRepository;
+import org.example.repository.impl.InMemoryWorkSpaceRepository;
+import org.example.service.AppStateService;
 import org.example.service.AuthService;
+import org.example.service.impl.AppStateServiceImpl;
 import org.example.service.impl.AuthServiceImpl;
-import org.example.utils.FileManager;
+import org.example.service.impl.PersistenceServiceImpl;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -25,7 +29,7 @@ public class AppFacade {
 
     public void start() {
 
-        FileManager.fetchData();
+        restoreAppState();
 
         while (true) {
             AccessLevel accessLevel = authService.getAccessLevel();
@@ -85,6 +89,14 @@ public class AppFacade {
                 exit      - exits the program
 
                 Please type a command to continue:""");
+    }
+
+    private void restoreAppState() {
+        AppStateService appStateService = new AppStateServiceImpl(
+                InMemoryBookingRepository.getInstance(),
+                InMemoryWorkSpaceRepository.getInstance(),
+                new PersistenceServiceImpl());
+        appStateService.restoreAllData();
     }
 
 }
