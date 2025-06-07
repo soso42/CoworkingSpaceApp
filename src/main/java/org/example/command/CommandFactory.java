@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class CommandFactory {
 
-    Map<String, Command> commands = Map.of(
+    private final Map<String, Command> commands = Map.of(
         "admin", new AdminCommand(),
         "add", new AddCommand(),
         "remove", new RemoveCommand(),

@@ -1,25 +1,19 @@
 package org.example.repository.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.entity.Booking;
 import org.example.repository.BookingRepository;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
 public class InMemoryBookingRepository implements BookingRepository {
 
     private static InMemoryBookingRepository INSTANCE;
-    private final List<Booking> bookings = new ArrayList<>();
-
-
-    private InMemoryBookingRepository() {
-        bookings.add(new Booking(101L,
-                1L,
-                LocalDate.of(2025, 5, 29),
-                LocalDate.of(2025, 5, 31)));
-    }
+    private List<Booking> bookings;
 
 
     @Override
