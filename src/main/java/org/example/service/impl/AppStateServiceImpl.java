@@ -29,8 +29,14 @@ public class AppStateServiceImpl implements AppStateService {
     @Override
     public void restoreAllData() {
         Map<Long, Booking> bookings = persistenceService.readFromFile(BOOKINGS_FILE);
-        bookingRepository.setBookings(bookings);
         Map<Long, WorkSpace> workspaces = persistenceService.readFromFile(WORKSPACES_FILE);
+
+        if (bookings ==  null || workspaces == null) {
+            System.out.println("!!!   DB files are corrupt or not found. nothing was loaded   !!!");
+            return;
+        }
+
+        bookingRepository.setBookings(bookings);
         workSpaceRepository.setWorkspaces(workspaces);
     }
 
