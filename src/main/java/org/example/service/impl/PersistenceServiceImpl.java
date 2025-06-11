@@ -4,11 +4,12 @@ import org.example.service.PersistenceService;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 public class PersistenceServiceImpl implements PersistenceService {
 
     @Override
-    public void saveToFile(List<? extends Serializable> list, String fileName) {
+    public void saveToFile(Map<Long, ? extends Serializable> list, String fileName) {
         try (FileOutputStream file = new FileOutputStream(fileName);
              ObjectOutputStream out = new ObjectOutputStream(file)) {
 
@@ -22,13 +23,13 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public <T extends Serializable> List<T> readFromFile(String fileName) {
-        List<T> data = null;
+    public <T extends Serializable> Map<Long, T> readFromFile(String fileName) {
+        Map<Long, T> data = null;
         try (FileInputStream file = new FileInputStream(fileName);
              ObjectInputStream in = new ObjectInputStream(file)) {
 
             Object result = in.readObject();
-            data = (List<T>) result;
+            data = (Map<Long, T>) result;
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + e.getMessage());
