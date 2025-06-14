@@ -21,12 +21,13 @@ public class InMemoryBookingRepository implements BookingRepository {
 
 
     @Override
-    public void save(Booking booking) {
+    public Booking save(Booking booking) {
         Long lastId = this.bookings.keySet().stream()
                         .max(Long::compareTo)
                         .orElse(0L);
         booking.setId(lastId + 1);
         this.bookings.put(booking.getId(), booking);
+        return booking;
     }
 
     @Override
