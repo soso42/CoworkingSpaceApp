@@ -28,7 +28,7 @@ class WorkSpaceServiceImplTest {
         // Given
         Long lastIdInDb = service.findAll().getLast().getId();
         WorkSpaceType type = WorkSpaceType.FLEXIBLE_DESK;
-        Double price = 100.0;
+        Integer price = 100;
         WorkSpace workSpace = new WorkSpace();
         workSpace.setId(lastIdInDb + 1);
         workSpace.setType(type);
@@ -49,7 +49,7 @@ class WorkSpaceServiceImplTest {
         WorkSpace workSpace = new WorkSpace();
         workSpace.setId(++lastIdInDb);
         workSpace.setType(WorkSpaceType.FLEXIBLE_DESK);
-        workSpace.setPrice(100.0);
+        workSpace.setPrice(100);
         service.save(workSpace);
         // When
         service.removeWorkSpace(lastIdInDb);

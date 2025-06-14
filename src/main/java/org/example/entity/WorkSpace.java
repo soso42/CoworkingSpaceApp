@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkSpace implements Serializable {
 
     @Serial
@@ -17,7 +18,7 @@ public class WorkSpace implements Serializable {
 
     private Long id;
     private WorkSpaceType type;
-    private Double price;
+    private Integer price;
     private Boolean available = true;
 
     @Override

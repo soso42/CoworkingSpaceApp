@@ -17,6 +17,8 @@ public class InMemoryBookingRepository implements BookingRepository {
     private static InMemoryBookingRepository INSTANCE;
     private Map<Long, Booking> bookings = new HashMap<>();
 
+    private InMemoryBookingRepository() {}
+
 
     @Override
     public void save(Booking booking) {

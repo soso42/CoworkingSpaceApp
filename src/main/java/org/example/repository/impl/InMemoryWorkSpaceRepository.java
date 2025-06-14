@@ -3,6 +3,7 @@ package org.example.repository.impl;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.entity.WorkSpace;
+import org.example.exceptions.WorkSpaceNotFoundException;
 import org.example.repository.WorkSpaceRepository;
 
 import java.util.HashMap;
@@ -18,22 +19,25 @@ public class InMemoryWorkSpaceRepository implements WorkSpaceRepository {
 
     private Map<Long, WorkSpace> workspaces = new HashMap<>();
 
+    private InMemoryWorkSpaceRepository() {}
+
 
     @Override
-    public void save(WorkSpace workSpace) {
+    public WorkSpace save(WorkSpace workSpace) {
         Long lastId = this.workspaces.keySet()
                 .stream()
                 .max(Long::compareTo)
                 .orElse(0L);
         workSpace.setId(lastId + 1);
         this.workspaces.put(workSpace.getId(), workSpace);
+        return workspaces.get(workSpace.getId());
     }
 
     @Override
     public WorkSpace update(WorkSpace workSpace) {
         WorkSpace savedWorkSpace = this.workspaces.get(workSpace.getId());
         if (savedWorkSpace == null) {
-            throw  new RuntimeException("No work space found");
+            throw  new WorkSpaceNotFoundException("No work space found");
         }
         savedWorkSpace.setId(workSpace.getId());
         savedWorkSpace.setType(workSpace.getType());

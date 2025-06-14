@@ -30,7 +30,7 @@ public class AddCommand implements Command {
         workSpace.setType(types.get(Long.parseLong(scanner.nextLine())));
 
         System.out.println("What is the price of the work space? (enter numeric value)");
-        workSpace.setPrice(Double.parseDouble(scanner.nextLine()));
+        workSpace.setPrice(Integer.parseInt(scanner.nextLine()));
 
         workSpaceService.save(workSpace);
 
