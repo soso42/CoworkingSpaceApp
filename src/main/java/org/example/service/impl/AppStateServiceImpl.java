@@ -8,7 +8,7 @@ import org.example.repository.impl.InMemoryWorkSpaceRepository;
 import org.example.service.AppStateService;
 import org.example.service.PersistenceService;
 
-import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 public class AppStateServiceImpl implements AppStateService {
@@ -28,9 +28,15 @@ public class AppStateServiceImpl implements AppStateService {
 
     @Override
     public void restoreAllData() {
-        List<Booking> bookings = persistenceService.readFromFile(BOOKINGS_FILE);
+        Map<Long, Booking> bookings = persistenceService.readFromFile(BOOKINGS_FILE);
+        Map<Long, WorkSpace> workspaces = persistenceService.readFromFile(WORKSPACES_FILE);
+
+        if (bookings ==  null || workspaces == null) {
+            System.out.println("!!!   DB files are corrupt or not found. nothing was loaded   !!!");
+            return;
+        }
+
         bookingRepository.setBookings(bookings);
-        List<WorkSpace> workspaces = persistenceService.readFromFile(WORKSPACES_FILE);
         workSpaceRepository.setWorkspaces(workspaces);
     }
 

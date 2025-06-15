@@ -17,8 +17,6 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
     @Override
     public void save(WorkSpace workSpace) {
-        Long id = repository.findAll().getLast().getId();
-        workSpace.setId(++id);
         repository.save(workSpace);
     }
 
