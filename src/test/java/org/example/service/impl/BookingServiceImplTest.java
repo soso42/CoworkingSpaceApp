@@ -10,12 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 
 class BookingServiceImplTest {
 
@@ -33,41 +33,43 @@ class BookingServiceImplTest {
     @Test
     void book_happyPath() {
         // Given
-        Booking booking1 = Booking.builder()
+        Booking bookingInDb = Booking.builder()
                 .workSpaceId(1L)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
-        Booking booking2 = Booking.builder()
+        when(bookingRepository.findAll()).thenReturn(List.of(bookingInDb));
+        Booking newBooking = Booking.builder()
                 .workSpaceId(1L)
                 .startDate(LocalDate.parse("2026-01-01"))
                 .endDate(LocalDate.parse("2026-02-02"))
                 .build();
-        when(bookingRepository.findAll()).thenReturn(List.of(booking1));
 
         // When
         // Then
-        assertDoesNotThrow(() -> bookingService.book(booking2));
+        assertDoesNotThrow(() -> bookingService.book(newBooking));
+        verify(bookingRepository, times(1)).findAll();
     }
 
     @Test
     void book_whenBookingsOverlap_throwException() {
         // Given
-        Booking booking1 = Booking.builder()
+        Booking bookingInDb = Booking.builder()
                 .workSpaceId(1L)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
-        Booking booking2 = Booking.builder()
+        when(bookingRepository.findAll()).thenReturn(List.of(bookingInDb));
+        Booking newBooking = Booking.builder()
                 .workSpaceId(1L)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
-        when(bookingRepository.findAll()).thenReturn(List.of(booking1));
 
         // When
         // Then
-        assertThrows(BookingNotAvailableException.class, () -> bookingService.book(booking2));
+        assertThrows(BookingNotAvailableException.class, () -> bookingService.book(newBooking));
+        verify(bookingRepository, times(1)).findAll();
     }
 
     @Test
