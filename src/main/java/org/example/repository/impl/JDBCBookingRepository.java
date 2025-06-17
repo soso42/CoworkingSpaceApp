@@ -1,7 +1,6 @@
 package org.example.repository.impl;
 
 import org.example.entity.Booking;
-import org.example.entity.WorkSpace;
 import org.example.exceptions.BookingNotFoundException;
 import org.example.repository.BookingRepository;
 

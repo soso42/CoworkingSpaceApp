@@ -25,14 +25,6 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:5.18.0")
 }
 
-flyway {
-    url = 'jdbc:postgresql://localhost:54321/coworking_app'
-    user = 'postgres'
-    password = '1'
-    schemas = ['public']
-    locations = ['filesystem:src/main/resources/db/migration']
-}
-
 test {
     useJUnitPlatform()
 }

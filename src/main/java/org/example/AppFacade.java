@@ -5,6 +5,7 @@ import org.example.command.CommandFactory;
 import org.example.enums.AccessLevel;
 import org.example.exceptions.UnknownCommandException;
 import org.example.service.AuthService;
+import org.example.service.impl.AppStateServiceImpl;
 import org.example.service.impl.AuthServiceImpl;
 import org.flywaydb.core.Flyway;
 
@@ -25,10 +26,7 @@ public class AppFacade {
 
     public void start() {
 
-        Flyway flyway = Flyway.configure()
-                .dataSource("jdbc:postgresql://localhost:54321/coworking_app", "postgres", "1")
-                .load();
-        flyway.migrate();
+        new AppStateServiceImpl().createDatabaseSchema();
 
         while (true) {
             AccessLevel accessLevel = authService.getAccessLevel();
