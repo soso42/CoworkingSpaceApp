@@ -4,7 +4,7 @@ import org.example.entity.WorkSpace;
 import org.example.enums.WorkSpaceType;
 import org.example.exceptions.WorkSpaceNotFoundException;
 import org.example.repository.WorkSpaceRepository;
-import org.example.repository.impl.InMemoryWorkSpaceRepository;
+import org.example.repository.impl.JDBCWorkSpaceRepository;
 import org.example.service.WorkSpaceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class WorkSpaceServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.repository = mock(InMemoryWorkSpaceRepository.class);
+        this.repository = mock(JDBCWorkSpaceRepository.class);
         this.workSpaceService = new WorkSpaceServiceImpl(repository);
     }
 
