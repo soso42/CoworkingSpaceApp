@@ -7,7 +7,6 @@ import org.example.exceptions.UnknownCommandException;
 import org.example.service.AuthService;
 import org.example.service.impl.AppStateServiceImpl;
 import org.example.service.impl.AuthServiceImpl;
-import org.flywaydb.core.Flyway;
 
 import java.util.Map;
 import java.util.Scanner;

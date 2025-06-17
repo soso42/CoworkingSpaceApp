@@ -1,5 +1,6 @@
 package org.example.repository.impl;
 
+import org.example.config.AppConfig;
 import org.example.entity.Booking;
 import org.example.exceptions.BookingNotFoundException;
 import org.example.repository.BookingRepository;
@@ -13,16 +14,20 @@ import java.util.Optional;
 public class JDBCBookingRepository implements BookingRepository {
 
     private static JDBCBookingRepository instance;
-    private static final String DATABASE = "jdbc:postgresql://localhost:54321/coworking_app";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "1";
+    private static String DATABASE;
+    private static String USERNAME;
+    private static String PASSWORD;
 
     private static final String INSERT_QUERY = "INSERT INTO booking (workspace_id, start_date, end_date) VALUES (?, ?, ?);";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM booking WHERE id = ?;";
     private static final String FIND_ALL_QUERY = "SELECT * FROM booking;";
     private static final String DELETE_QUERY = "DELETE FROM booking WHERE id = ?;";
 
-    private JDBCBookingRepository() {}
+    private JDBCBookingRepository() {
+        DATABASE = AppConfig.get("db.url");
+        USERNAME = AppConfig.get("db.user");
+        PASSWORD = AppConfig.get("db.password");
+    }
 
 
     @Override

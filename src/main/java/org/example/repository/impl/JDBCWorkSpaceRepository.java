@@ -1,5 +1,6 @@
 package org.example.repository.impl;
 
+import org.example.config.AppConfig;
 import org.example.entity.WorkSpace;
 import org.example.enums.WorkSpaceType;
 import org.example.exceptions.WorkSpaceNotFoundException;
@@ -13,9 +14,9 @@ import java.util.Optional;
 public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
 
     private static JDBCWorkSpaceRepository instance;
-    private static final String DATABASE = "jdbc:postgresql://localhost:54321/coworking_app";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "1";
+    private static String DATABASE;
+    private static String USERNAME;
+    private static String PASSWORD;
 
     private static final String INSERT_QUERY = "INSERT INTO workspace (type, price, available) VALUES ( ?, ?, ? ); ";
     private static final String UPDATE_QUERY = "UPDATE workspace SET type = ? , price = ? , available = ? WHERE id = ? ;";
@@ -23,7 +24,11 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     private static final String FIND_ALL_QUERY = "SELECT * FROM workspace;";
     private static final String DELETE_QUERY = "DELETE FROM workspace WHERE id = ?";
 
-    private JDBCWorkSpaceRepository() {}
+    private JDBCWorkSpaceRepository() {
+        DATABASE = AppConfig.get("db.url");
+        USERNAME = AppConfig.get("db.user");
+        PASSWORD = AppConfig.get("db.password");
+    }
 
 
     @Override

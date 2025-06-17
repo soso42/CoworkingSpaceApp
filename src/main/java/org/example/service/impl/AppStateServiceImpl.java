@@ -1,15 +1,20 @@
 package org.example.service.impl;
 
-import lombok.AllArgsConstructor;
+import org.example.config.AppConfig;
 import org.example.service.AppStateService;
 import org.flywaydb.core.Flyway;
 
-@AllArgsConstructor
 public class AppStateServiceImpl implements AppStateService {
 
-    private static final String DATABASE = "jdbc:postgresql://localhost:54321/coworking_app";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "1";
+    private static String DATABASE;
+    private static String USERNAME;
+    private static String PASSWORD;
+
+    public AppStateServiceImpl() {
+        DATABASE = AppConfig.get("db.url");
+        USERNAME = AppConfig.get("db.user");
+        PASSWORD = AppConfig.get("db.password");
+    }
 
     @Override
     public void createDatabaseSchema() {
