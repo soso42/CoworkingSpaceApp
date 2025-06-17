@@ -1,13 +1,8 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.example.entity.Booking;
-import org.example.entity.WorkSpace;
-import org.example.repository.impl.InMemoryBookingRepository;
 import org.example.service.AppStateService;
 import org.example.service.PersistenceService;
-
-import java.util.Map;
 
 @AllArgsConstructor
 public class AppStateServiceImpl implements AppStateService {

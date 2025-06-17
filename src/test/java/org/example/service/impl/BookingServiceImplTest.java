@@ -4,7 +4,7 @@ import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
 import org.example.exceptions.BookingNotFoundException;
 import org.example.repository.BookingRepository;
-import org.example.repository.impl.InMemoryBookingRepository;
+import org.example.repository.impl.JDBCBookingRepository;
 import org.example.service.BookingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class BookingServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.bookingRepository = mock(InMemoryBookingRepository.class);
+        this.bookingRepository = mock(JDBCBookingRepository.class);
         this.bookingService = new BookingServiceImpl(bookingRepository);
     }
 

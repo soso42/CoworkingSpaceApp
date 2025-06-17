@@ -17,6 +17,11 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "1";
 
+    private static final String INSERT_QUERY = "INSERT INTO workspace (type, price, available) VALUES ( ?, ?, ? ); ";
+    private static final String UPDATE_QUERY = "UPDATE workspace SET type = ? , price = ? , available = ? WHERE id = ? ;";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM workspace WHERE id = ? ";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM workspace;";
+    private static final String DELETE_QUERY = "DELETE FROM workspace WHERE id = ?";
 
     private JDBCWorkSpaceRepository() {}
 
@@ -24,11 +29,9 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     @Override
     public WorkSpace save(WorkSpace workSpace) {
 
-        String query = "INSERT INTO workspace (type, price, available) VALUES ( ?, ?, ? ); ";
-
         try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, workSpace.getType().toString());
             stmt.setInt(2, workSpace.getPrice());
@@ -52,11 +55,9 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     @Override
     public WorkSpace update(WorkSpace workSpace) {
 
-        String query = "UPDATE workspace SET type = ? , price = ? , available = ? WHERE id = ? ;";
-
         try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
 
-            PreparedStatement stmt = conn.prepareStatement(query);
+            PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY);
 
             stmt.setString(1, workSpace.getType().toString());
             stmt.setInt(2, workSpace.getPrice());
@@ -78,11 +79,10 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     @Override
     public Optional<WorkSpace> findById(Long id) {
 
-        String query = "SELECT * FROM workspace WHERE id = ?";
         WorkSpace workSpace = null;
 
         try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-            PreparedStatement ps = conn.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(FIND_BY_ID_QUERY);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -104,12 +104,11 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     @Override
     public List<WorkSpace> findAll() {
 
-        String query = "SELECT * FROM workspace";
         List<WorkSpace> workSpaces = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
 
             while (rs.next()) {
                 WorkSpace workSpace = new WorkSpace();
@@ -130,10 +129,8 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     @Override
     public void deleteById(Long id) {
 
-        String query = "DELETE FROM workspace WHERE id = ?";
-
         try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-            PreparedStatement ps = conn.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(DELETE_QUERY);
             ps.setLong(1, id);
             ps.executeUpdate();
 

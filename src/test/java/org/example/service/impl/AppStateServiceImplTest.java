@@ -1,23 +1,16 @@
 package org.example.service.impl;
 
-import org.example.repository.impl.InMemoryBookingRepository;
 import org.example.service.PersistenceService;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashMap;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class AppStateServiceImplTest {
 
-    @Mock
-    private InMemoryBookingRepository bookingRepository;
+//    @Mock
+//    private InMemoryBookingRepository bookingRepository;
 //    @Mock
 //    private InMemoryWorkSpaceRepository workSpaceRepository;
     @Mock

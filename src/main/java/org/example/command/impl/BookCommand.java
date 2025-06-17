@@ -3,7 +3,7 @@ package org.example.command.impl;
 import org.example.command.Command;
 import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
-import org.example.repository.impl.InMemoryBookingRepository;
+import org.example.repository.impl.JDBCBookingRepository;
 import org.example.repository.impl.JDBCWorkSpaceRepository;
 import org.example.service.BookingService;
 import org.example.service.WorkSpaceService;
@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class BookCommand implements Command {
 
-    private final BookingService bookingService = new BookingServiceImpl(InMemoryBookingRepository.getInstance());
+    private final BookingService bookingService = new BookingServiceImpl(JDBCBookingRepository.getInstance());
     private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(JDBCWorkSpaceRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 

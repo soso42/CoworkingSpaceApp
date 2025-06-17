@@ -1,7 +1,10 @@
 package org.example.repository.impl;
 
 import org.example.entity.Booking;
+import org.example.entity.WorkSpace;
+import org.example.enums.WorkSpaceType;
 import org.example.repository.BookingRepository;
+import org.example.repository.WorkSpaceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,21 +15,24 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryBookingRepositoryTest {
+class JDBCBookingRepositoryTest {
 
+    private WorkSpaceRepository workSpaceRepository;
     private BookingRepository bookingRepository;
 
     @BeforeEach
     void setUp() {
-        this.bookingRepository = InMemoryBookingRepository.getInstance();
+        this.workSpaceRepository = JDBCWorkSpaceRepository.getInstance();
+        this.bookingRepository = JDBCBookingRepository.getInstance();
     }
 
 
     @Test
     void save_happyPath() {
         // Given
+        Long workSpaceId = getWorkSpaceIdFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(1L)
+                .workSpaceId(workSpaceId)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
@@ -35,14 +41,19 @@ class InMemoryBookingRepositoryTest {
         Booking savedBooking = bookingRepository.save(booking);
 
         // Then
-        assertNotNull(savedBooking);
+        assertAll(
+                () -> assertEquals(booking.getWorkSpaceId(), savedBooking.getWorkSpaceId()),
+                () -> assertEquals(booking.getStartDate(), savedBooking.getStartDate()),
+                () -> assertEquals(booking.getEndDate(), savedBooking.getEndDate())
+        );
     }
 
     @Test
     void findById_happyPath() {
         // Given
+        Long workSpaceId = getWorkSpaceIdFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(1L)
+                .workSpaceId(workSpaceId)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
@@ -70,21 +81,27 @@ class InMemoryBookingRepositoryTest {
     void findAll_happyPath() {
         // Given
         int initialSize = bookingRepository.findAll().size();
-        bookingRepository.save(new Booking());
-        bookingRepository.save(new Booking());
+        Long workSpaceId = getWorkSpaceIdFromDB();
+        Booking booking = Booking.builder()
+                .workSpaceId(workSpaceId)
+                .startDate(LocalDate.of(2027, 5,5))
+                .endDate(LocalDate.of(2027, 6, 6))
+                .build();
+        bookingRepository.save(booking);
 
         // When
         int actualSize = bookingRepository.findAll().size();
 
         // Then
-        assertEquals(initialSize + 2, actualSize);
+        assertEquals(initialSize + 1, actualSize);
     }
 
     @Test
     void delete_happyPath() {
         // Given
+        Long workSpaceId = getWorkSpaceIdFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(1L)
+                .workSpaceId(workSpaceId)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
@@ -103,11 +120,22 @@ class InMemoryBookingRepositoryTest {
     void getInstance_happyPath() {
         // Given
         // When
-        BookingRepository repository1 = InMemoryBookingRepository.getInstance();
-        BookingRepository repository2 = InMemoryBookingRepository.getInstance();
+        BookingRepository repository1 = JDBCBookingRepository.getInstance();
+        BookingRepository repository2 = JDBCBookingRepository.getInstance();
 
         // Then
         assertEquals(repository1, repository2);
+    }
+
+
+    private Long getWorkSpaceIdFromDB() {
+        WorkSpace workSpace = WorkSpace.builder()
+                .type(WorkSpaceType.CONFERENCE_ROOM)
+                .price(132)
+                .available(true)
+                .build();
+        WorkSpace savedWorkSpace = workSpaceRepository.save(workSpace);
+        return savedWorkSpace.getId();
     }
 
 }

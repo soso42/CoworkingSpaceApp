@@ -4,12 +4,8 @@ import org.example.command.Command;
 import org.example.command.CommandFactory;
 import org.example.enums.AccessLevel;
 import org.example.exceptions.UnknownCommandException;
-import org.example.repository.impl.InMemoryBookingRepository;
-import org.example.service.AppStateService;
 import org.example.service.AuthService;
-import org.example.service.impl.AppStateServiceImpl;
 import org.example.service.impl.AuthServiceImpl;
-import org.example.service.impl.PersistenceServiceImpl;
 import org.flywaydb.core.Flyway;
 
 import java.util.Map;
@@ -33,8 +29,6 @@ public class AppFacade {
                 .dataSource("jdbc:postgresql://localhost:54321/coworking_app", "postgres", "1")
                 .load();
         flyway.migrate();
-
-        restoreAppState();
 
         while (true) {
             AccessLevel accessLevel = authService.getAccessLevel();
@@ -94,12 +88,6 @@ public class AppFacade {
                 exit      - exits the program
 
                 Please type a command to continue:""");
-    }
-
-    private void restoreAppState() {
-        AppStateService appStateService = new AppStateServiceImpl(
-                new PersistenceServiceImpl());
-        appStateService.restoreAllData();
     }
 
 }
