@@ -23,18 +23,27 @@ public class JDBCBookingRepository implements BookingRepository {
     private static final String FIND_ALL_QUERY = "SELECT * FROM booking;";
     private static final String DELETE_QUERY = "DELETE FROM booking WHERE id = ?;";
 
+    private Connection connection;
+
     private JDBCBookingRepository() {
         DATABASE = AppConfig.get("db.url");
         USERNAME = AppConfig.get("db.user");
         PASSWORD = AppConfig.get("db.password");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::closeConnection));
+
+        try {
+            this.connection = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException("Connection to database can not be established: " + e.getMessage());
+        }
     }
 
 
     @Override
     public Booking save(Booking booking) {
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
-            PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setLong(1, booking.getWorkSpaceId());
             stmt.setDate(2, Date.valueOf(booking.getStartDate()));
@@ -58,8 +67,7 @@ public class JDBCBookingRepository implements BookingRepository {
     @Override
     public Optional<Booking> findById(Long id) {
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
-            PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID_QUERY)) {
+        try (PreparedStatement stmt = connection.prepareStatement(FIND_BY_ID_QUERY)) {
 
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -85,8 +93,7 @@ public class JDBCBookingRepository implements BookingRepository {
 
         List<Booking> bookings = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
-             Statement stmt = conn.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
 
             ResultSet rs = stmt.executeQuery(FIND_ALL_QUERY);
 
@@ -109,8 +116,7 @@ public class JDBCBookingRepository implements BookingRepository {
     @Override
     public void delete(Booking booking) {
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
-            PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY)) {
+        try (PreparedStatement stmt = connection.prepareStatement(DELETE_QUERY)) {
 
             stmt.setLong(1, booking.getId());
             int rows = stmt.executeUpdate();
@@ -121,6 +127,19 @@ public class JDBCBookingRepository implements BookingRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+
+    private void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+                System.out.println("Connection was closed.");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

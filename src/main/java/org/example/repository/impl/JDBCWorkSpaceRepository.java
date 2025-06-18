@@ -24,19 +24,27 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     private static final String FIND_ALL_QUERY = "SELECT * FROM workspace;";
     private static final String DELETE_QUERY = "DELETE FROM workspace WHERE id = ?";
 
+    private Connection connection;
+
     private JDBCWorkSpaceRepository() {
         DATABASE = AppConfig.get("db.url");
         USERNAME = AppConfig.get("db.user");
         PASSWORD = AppConfig.get("db.password");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::closeConnection));
+
+        try {
+            this.connection = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException("Connection to database can not be established: " + e.getMessage());
+        }
     }
 
 
     @Override
     public WorkSpace save(WorkSpace workSpace) {
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-
-            PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement stmt = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, workSpace.getType().toString());
             stmt.setInt(2, workSpace.getPrice());
@@ -60,9 +68,7 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
     @Override
     public WorkSpace update(WorkSpace workSpace) {
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-
-            PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY);
+        try (PreparedStatement stmt = connection.prepareStatement(UPDATE_QUERY)) {
 
             stmt.setString(1, workSpace.getType().toString());
             stmt.setInt(2, workSpace.getPrice());
@@ -86,8 +92,8 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
 
         WorkSpace workSpace = null;
 
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-            PreparedStatement ps = conn.prepareStatement(FIND_BY_ID_QUERY);
+        try (PreparedStatement ps = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -111,8 +117,8 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
 
         List<WorkSpace> workSpaces = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
+
             ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
 
             while (rs.next()) {
@@ -133,14 +139,24 @@ public class JDBCWorkSpaceRepository implements WorkSpaceRepository {
 
     @Override
     public void deleteById(Long id) {
-
-        try (Connection conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD)) {
-            PreparedStatement ps = conn.prepareStatement(DELETE_QUERY);
+        try (PreparedStatement ps = connection.prepareStatement(DELETE_QUERY)) {
             ps.setLong(1, id);
             ps.executeUpdate();
-
         } catch (SQLException e) {
             System.out.println("Could not connect to database: " + e.getMessage());
+        }
+    }
+
+
+
+    private void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+                System.out.println("Connection was closed.");
+            } catch (SQLException e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
     }
 
