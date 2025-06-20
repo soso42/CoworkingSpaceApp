@@ -25,7 +25,7 @@ public class AppFacade {
 
     public void start() {
 
-        new AppStateServiceImpl().createDatabaseSchema();
+        new AppStateServiceImpl().initDatabase();
 
         while (true) {
             AccessLevel accessLevel = authService.getAccessLevel();

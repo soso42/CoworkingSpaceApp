@@ -2,8 +2,6 @@ package org.example.entity;
 
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -12,10 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 @Builder
-public class Booking implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 12345L;
+public class Booking {
 
     private Long id;
     private Long workSpaceId;

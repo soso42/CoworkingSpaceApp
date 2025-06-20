@@ -30,13 +30,13 @@ public class JDBCBookingRepository implements BookingRepository {
         USERNAME = AppConfig.get("db.user");
         PASSWORD = AppConfig.get("db.password");
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::closeConnection));
-
         try {
             this.connection = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
         } catch (SQLException e) {
             throw new RuntimeException("Connection to database can not be established: " + e.getMessage());
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::closeConnection));
     }
 
 

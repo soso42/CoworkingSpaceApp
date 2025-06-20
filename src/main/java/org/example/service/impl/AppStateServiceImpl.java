@@ -17,7 +17,7 @@ public class AppStateServiceImpl implements AppStateService {
     }
 
     @Override
-    public void createDatabaseSchema() {
+    public void initDatabase() {
         Flyway flyway = Flyway.configure()
                 .dataSource(DATABASE, USERNAME, PASSWORD)
                 .load();
