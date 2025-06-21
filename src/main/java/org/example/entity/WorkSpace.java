@@ -3,21 +3,16 @@ package org.example.entity;
 import lombok.*;
 import org.example.enums.WorkSpaceType;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkSpace implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 10101L;
+@Builder
+public class WorkSpace {
 
     private Long id;
     private WorkSpaceType type;
-    private Double price;
+    private Integer price;
     private Boolean available = true;
 
     @Override
