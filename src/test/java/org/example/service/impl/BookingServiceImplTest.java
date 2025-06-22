@@ -4,76 +4,106 @@ import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
 import org.example.exceptions.BookingNotFoundException;
 import org.example.repository.BookingRepository;
-import org.example.repository.impl.InMemoryBookingRepository;
+import org.example.repository.impl.JDBCBookingRepository;
 import org.example.service.BookingService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 class BookingServiceImplTest {
 
-    private static BookingRepository mockBookingRepository = mock(InMemoryBookingRepository.class);
-    private static BookingService mockBookingService = new BookingServiceImpl(mockBookingRepository);
+    private BookingRepository bookingRepository;
+    private BookingService bookingService;
 
-    private static BookingService realBookingService = new BookingServiceImpl(InMemoryBookingRepository.getInstance());
+
+    @BeforeEach
+    void setUp() {
+        this.bookingRepository = mock(JDBCBookingRepository.class);
+        this.bookingService = new BookingServiceImpl(bookingRepository);
+    }
 
 
     @Test
     void book_happyPath() {
         // Given
-        int currentBookings = realBookingService.findAll().size();
-        Booking booking1 = new Booking(null, 1L, LocalDate.of(2022, 1, 1), LocalDate.of(2022, 1,  2));
+        Booking bookingInDb = Booking.builder()
+                .workSpaceId(1L)
+                .startDate(LocalDate.parse("2027-01-01"))
+                .endDate(LocalDate.parse("2027-02-02"))
+                .build();
+        when(bookingRepository.findAll()).thenReturn(List.of(bookingInDb));
+        Booking newBooking = Booking.builder()
+                .workSpaceId(1L)
+                .startDate(LocalDate.parse("2026-01-01"))
+                .endDate(LocalDate.parse("2026-02-02"))
+                .build();
+
         // When
-        realBookingService.book(booking1);
         // Then
-        assertEquals(currentBookings + 1, realBookingService.findAll().size());
+        assertDoesNotThrow(() -> bookingService.book(newBooking));
+        verify(bookingRepository, times(1)).findAll();
     }
 
     @Test
-    void book_whenBookingsOverlap() {
+    void book_whenBookingsOverlap_throwException() {
         // Given
-        Booking booking1 = new Booking(null, 1L, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1,  2));
-        Booking booking2 = new Booking(null, 1L, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1,  2));
+        Booking bookingInDb = Booking.builder()
+                .workSpaceId(1L)
+                .startDate(LocalDate.parse("2027-01-01"))
+                .endDate(LocalDate.parse("2027-02-02"))
+                .build();
+        when(bookingRepository.findAll()).thenReturn(List.of(bookingInDb));
+        Booking newBooking = Booking.builder()
+                .workSpaceId(1L)
+                .startDate(LocalDate.parse("2027-01-01"))
+                .endDate(LocalDate.parse("2027-02-02"))
+                .build();
+
         // When
-        realBookingService.book(booking1);
         // Then
-        assertThrows(BookingNotAvailableException.class, () -> realBookingService.book(booking2));
+        assertThrows(BookingNotAvailableException.class, () -> bookingService.book(newBooking));
+        verify(bookingRepository, times(1)).findAll();
     }
 
     @Test
     void findAll() {
         // Given
-        int currentBookings = realBookingService.findAll().size();
-        Booking booking1 = new Booking(null, 1L, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1,  2));
-        Booking booking2 = new Booking(null, 1L, LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1,  2));
+        List<Booking> bookings = List.of(new Booking(), new Booking());
+        when(bookingRepository.findAll()).thenReturn(bookings);
+
         // When
-        realBookingService.book(booking1);
-        realBookingService.book(booking2);
+        int result = bookingService.findAll().size();
+
         // Then
-        assertEquals(currentBookings + 2, realBookingService.findAll().size());
+        assertEquals(bookings.size(), result);
     }
 
     @Test
     void cancelBooking_happyPath() {
         // Given
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(new Booking()));
+
         // When
-        when(mockBookingRepository.findById(111L)).thenReturn(Optional.of(new Booking()));
         // Then
-        assertDoesNotThrow(() -> mockBookingService.cancelBooking(111L));
+        assertDoesNotThrow(() -> bookingService.cancelBooking(111L));
     }
 
     @Test
     void cancelBooking_whenIdIncorrect() {
         // Given
         Long mockId = Long.MAX_VALUE;
+        when(bookingRepository.findById(mockId)).thenReturn(Optional.empty());
+
         // When
-        when(mockBookingRepository.findById(mockId)).thenReturn(Optional.empty());
         // Then
-        assertThrows(BookingNotFoundException.class, () -> mockBookingService.cancelBooking(mockId));
+        assertThrows(BookingNotFoundException.class, () -> bookingService.cancelBooking(mockId));
     }
 
 }

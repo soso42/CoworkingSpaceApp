@@ -16,8 +16,8 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
 
     @Override
-    public void save(WorkSpace workSpace) {
-        repository.save(workSpace);
+    public WorkSpace save(WorkSpace workSpace) {
+        return repository.save(workSpace);
     }
 
     @Override

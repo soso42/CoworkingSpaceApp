@@ -1,43 +1,26 @@
 package org.example.service.impl;
 
-import lombok.AllArgsConstructor;
-import org.example.entity.Booking;
-import org.example.entity.WorkSpace;
-import org.example.repository.impl.InMemoryBookingRepository;
-import org.example.repository.impl.InMemoryWorkSpaceRepository;
+import org.example.config.AppConfig;
 import org.example.service.AppStateService;
-import org.example.service.PersistenceService;
+import org.flywaydb.core.Flyway;
 
-import java.util.Map;
-
-@AllArgsConstructor
 public class AppStateServiceImpl implements AppStateService {
 
-    private static final String WORKSPACES_FILE = "workspacesDB";
-    private static final String BOOKINGS_FILE = "bookingsDB";
+    private static String DATABASE;
+    private static String USERNAME;
+    private static String PASSWORD;
 
-    private final InMemoryBookingRepository bookingRepository;
-    private final InMemoryWorkSpaceRepository workSpaceRepository;
-    private final PersistenceService persistenceService;
-
-    @Override
-    public void saveAllData() {
-        persistenceService.saveToFile(bookingRepository.getBookings(), BOOKINGS_FILE);
-        persistenceService.saveToFile(workSpaceRepository.getWorkspaces(), WORKSPACES_FILE);
+    public AppStateServiceImpl() {
+        DATABASE = AppConfig.get("db.url");
+        USERNAME = AppConfig.get("db.user");
+        PASSWORD = AppConfig.get("db.password");
     }
 
     @Override
-    public void restoreAllData() {
-        Map<Long, Booking> bookings = persistenceService.readFromFile(BOOKINGS_FILE);
-        Map<Long, WorkSpace> workspaces = persistenceService.readFromFile(WORKSPACES_FILE);
-
-        if (bookings ==  null || workspaces == null) {
-            System.out.println("!!!   DB files are corrupt or not found. nothing was loaded   !!!");
-            return;
-        }
-
-        bookingRepository.setBookings(bookings);
-        workSpaceRepository.setWorkspaces(workspaces);
+    public void initDatabase() {
+        Flyway flyway = Flyway.configure()
+                .dataSource(DATABASE, USERNAME, PASSWORD)
+                .load();
+        flyway.migrate();
     }
-
 }

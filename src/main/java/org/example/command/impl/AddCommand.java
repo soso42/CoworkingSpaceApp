@@ -3,7 +3,7 @@ package org.example.command.impl;
 import org.example.command.Command;
 import org.example.entity.WorkSpace;
 import org.example.enums.WorkSpaceType;
-import org.example.repository.impl.InMemoryWorkSpaceRepository;
+import org.example.repository.impl.JDBCWorkSpaceRepository;
 import org.example.service.WorkSpaceService;
 import org.example.service.impl.WorkSpaceServiceImpl;
 
@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class AddCommand implements Command {
 
-    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(InMemoryWorkSpaceRepository.getInstance());
+    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(JDBCWorkSpaceRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 
     Map<Long, WorkSpaceType> types = Map.of(
@@ -30,7 +30,7 @@ public class AddCommand implements Command {
         workSpace.setType(types.get(Long.parseLong(scanner.nextLine())));
 
         System.out.println("What is the price of the work space? (enter numeric value)");
-        workSpace.setPrice(Double.parseDouble(scanner.nextLine()));
+        workSpace.setPrice(Integer.parseInt(scanner.nextLine()));
 
         workSpaceService.save(workSpace);
 
