@@ -26,7 +26,7 @@ public class BookingServiceImpl implements BookingService {
 
     private boolean bookingOverlapsOthers(Booking booking) {
         return bookingRepository.findAll().stream()
-                .filter(b -> b.getWorkSpaceId().equals(booking.getWorkSpaceId()))
+                .filter(b -> b.getWorkSpace().getId().equals(booking.getWorkSpace().getId()))
                 .anyMatch(b -> overlaps(b, booking));
     }
 

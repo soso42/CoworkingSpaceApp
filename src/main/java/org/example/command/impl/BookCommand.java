@@ -3,8 +3,8 @@ package org.example.command.impl;
 import org.example.command.Command;
 import org.example.entity.Booking;
 import org.example.exceptions.BookingNotAvailableException;
-import org.example.repository.impl.JDBCBookingRepository;
-import org.example.repository.impl.JDBCWorkSpaceRepository;
+import org.example.repository.impl.JPABookingRepository;
+import org.example.repository.impl.JPAWorkSpaceRepository;
 import org.example.service.BookingService;
 import org.example.service.WorkSpaceService;
 import org.example.service.impl.BookingServiceImpl;
@@ -15,8 +15,8 @@ import java.util.Scanner;
 
 public class BookCommand implements Command {
 
-    private final BookingService bookingService = new BookingServiceImpl(JDBCBookingRepository.getInstance());
-    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(JDBCWorkSpaceRepository.getInstance());
+    private final BookingService bookingService = new BookingServiceImpl(JPABookingRepository.getInstance());
+    private final WorkSpaceService workSpaceService = new WorkSpaceServiceImpl(JPAWorkSpaceRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 
     @Override
@@ -34,7 +34,7 @@ public class BookCommand implements Command {
         System.out.println("\nPlease enter END date: (format: YYYY-MM-DD)");
         LocalDate endDate = LocalDate.parse(scanner.nextLine());
 
-        Booking booking = new Booking(null, id, startDate, endDate);
+        Booking booking = new Booking(null, null, startDate, endDate);
         try {
             bookingService.book(booking);
             System.out.println("\nBooking successfully made");
