@@ -2,7 +2,7 @@ package org.example.command.impl;
 
 import org.example.command.Command;
 import org.example.exceptions.BookingNotFoundException;
-import org.example.repository.impl.JDBCBookingRepository;
+import org.example.repository.impl.JPABookingRepository;
 import org.example.service.BookingService;
 import org.example.service.impl.BookingServiceImpl;
 
@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class CancelCommand implements Command {
 
-    private final BookingService bookingService = new BookingServiceImpl(JDBCBookingRepository.getInstance());
+    private final BookingService bookingService = new BookingServiceImpl(JPABookingRepository.getInstance());
     private final Scanner scanner = new Scanner(System.in);
 
     @Override

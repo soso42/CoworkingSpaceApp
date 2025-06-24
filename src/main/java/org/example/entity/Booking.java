@@ -1,9 +1,12 @@
 package org.example.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "booking")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,9 +15,18 @@ import java.time.LocalDate;
 @Builder
 public class Booking {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long workSpaceId;
+
+    @ManyToOne
+    @JoinColumn(name = "workspace_id")
+    private WorkSpace workSpace;
+
+    @Column(name = "start_date")
     private LocalDate startDate;
+
+    @Column(name = "end_date")
     private LocalDate endDate;
 
 }
