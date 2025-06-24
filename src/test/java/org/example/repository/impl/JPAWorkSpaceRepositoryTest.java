@@ -9,17 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.ParameterizedTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JDBCWorkSpaceRepositoryTest {
+class JPAWorkSpaceRepositoryTest {
 
     private WorkSpaceRepository repository;
 
     @BeforeEach
     void setUp() {
-        repository = JDBCWorkSpaceRepository.getInstance();
+        repository = JPAWorkSpaceRepository.getInstance();
     }
 
     @Test
@@ -153,11 +154,11 @@ class JDBCWorkSpaceRepositoryTest {
     void getInstance_happyPath() {
         // Given
         // When
-//        InMemoryWorkSpaceRepository repository1 = InMemoryWorkSpaceRepository.getInstance();
-//        InMemoryWorkSpaceRepository repository2 = InMemoryWorkSpaceRepository.getInstance();
+        JPAWorkSpaceRepository repository1 = JPAWorkSpaceRepository.getInstance();
+        JPAWorkSpaceRepository repository2 = JPAWorkSpaceRepository.getInstance();
 
         // Then
-//        assertEquals(repository1, repository2);
+        assertEquals(repository1, repository2);
     }
 
 }
