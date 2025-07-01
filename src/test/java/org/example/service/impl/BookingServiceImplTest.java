@@ -1,10 +1,11 @@
 package org.example.service.impl;
 
 import org.example.entity.Booking;
+import org.example.entity.WorkSpace;
 import org.example.exceptions.BookingNotAvailableException;
 import org.example.exceptions.BookingNotFoundException;
 import org.example.repository.BookingRepository;
-import org.example.repository.impl.JDBCBookingRepository;
+import org.example.repository.impl.JPABookingRepository;
 import org.example.service.BookingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class BookingServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.bookingRepository = mock(JDBCBookingRepository.class);
+        this.bookingRepository = mock(JPABookingRepository.class);
         this.bookingService = new BookingServiceImpl(bookingRepository);
     }
 
@@ -33,14 +34,16 @@ class BookingServiceImplTest {
     @Test
     void book_happyPath() {
         // Given
+        WorkSpace workSpace = WorkSpace.builder()
+                .id(1L).build();
         Booking bookingInDb = Booking.builder()
-                .workSpaceId(1L)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
         when(bookingRepository.findAll()).thenReturn(List.of(bookingInDb));
         Booking newBooking = Booking.builder()
-                .workSpaceId(1L)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2026-01-01"))
                 .endDate(LocalDate.parse("2026-02-02"))
                 .build();
@@ -54,14 +57,16 @@ class BookingServiceImplTest {
     @Test
     void book_whenBookingsOverlap_throwException() {
         // Given
+        WorkSpace workSpace = WorkSpace.builder()
+                .id(1L).build();
         Booking bookingInDb = Booking.builder()
-                .workSpaceId(1L)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
         when(bookingRepository.findAll()).thenReturn(List.of(bookingInDb));
         Booking newBooking = Booking.builder()
-                .workSpaceId(1L)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();

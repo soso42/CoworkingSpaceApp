@@ -15,24 +15,24 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JDBCBookingRepositoryTest {
+class JPABookingRepositoryTest {
 
     private WorkSpaceRepository workSpaceRepository;
     private BookingRepository bookingRepository;
 
     @BeforeEach
     void setUp() {
-        this.workSpaceRepository = JDBCWorkSpaceRepository.getInstance();
-        this.bookingRepository = JDBCBookingRepository.getInstance();
+        this.workSpaceRepository = JPAWorkSpaceRepository.getInstance();
+        this.bookingRepository = JPABookingRepository.getInstance();
     }
 
 
     @Test
     void save_happyPath() {
         // Given
-        Long workSpaceId = getWorkSpaceIdFromDB();
+        WorkSpace workSpace = getWorkSpaceFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(workSpaceId)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
@@ -42,7 +42,7 @@ class JDBCBookingRepositoryTest {
 
         // Then
         assertAll(
-                () -> assertEquals(booking.getWorkSpaceId(), savedBooking.getWorkSpaceId()),
+                () -> assertEquals(booking.getWorkSpace().getId(), savedBooking.getWorkSpace().getId()),
                 () -> assertEquals(booking.getStartDate(), savedBooking.getStartDate()),
                 () -> assertEquals(booking.getEndDate(), savedBooking.getEndDate())
         );
@@ -51,9 +51,9 @@ class JDBCBookingRepositoryTest {
     @Test
     void findById_happyPath() {
         // Given
-        Long workSpaceId = getWorkSpaceIdFromDB();
+        WorkSpace workSpace = getWorkSpaceFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(workSpaceId)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
@@ -81,9 +81,9 @@ class JDBCBookingRepositoryTest {
     void findAll_happyPath() {
         // Given
         int initialSize = bookingRepository.findAll().size();
-        Long workSpaceId = getWorkSpaceIdFromDB();
+        WorkSpace workSpace = getWorkSpaceFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(workSpaceId)
+                .workSpace(workSpace)
                 .startDate(LocalDate.of(2027, 5,5))
                 .endDate(LocalDate.of(2027, 6, 6))
                 .build();
@@ -99,9 +99,9 @@ class JDBCBookingRepositoryTest {
     @Test
     void delete_happyPath() {
         // Given
-        Long workSpaceId = getWorkSpaceIdFromDB();
+        WorkSpace workSpace = getWorkSpaceFromDB();
         Booking booking = Booking.builder()
-                .workSpaceId(workSpaceId)
+                .workSpace(workSpace)
                 .startDate(LocalDate.parse("2027-01-01"))
                 .endDate(LocalDate.parse("2027-02-02"))
                 .build();
@@ -120,22 +120,21 @@ class JDBCBookingRepositoryTest {
     void getInstance_happyPath() {
         // Given
         // When
-        BookingRepository repository1 = JDBCBookingRepository.getInstance();
-        BookingRepository repository2 = JDBCBookingRepository.getInstance();
+        BookingRepository repository1 = JPABookingRepository.getInstance();
+        BookingRepository repository2 = JPABookingRepository.getInstance();
 
         // Then
         assertEquals(repository1, repository2);
     }
 
 
-    private Long getWorkSpaceIdFromDB() {
+    private WorkSpace getWorkSpaceFromDB() {
         WorkSpace workSpace = WorkSpace.builder()
                 .type(WorkSpaceType.CONFERENCE_ROOM)
                 .price(132)
                 .available(true)
                 .build();
-        WorkSpace savedWorkSpace = workSpaceRepository.save(workSpace);
-        return savedWorkSpace.getId();
+        return workSpaceRepository.save(workSpace);
     }
 
 }
